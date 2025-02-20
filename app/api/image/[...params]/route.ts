@@ -1,22 +1,21 @@
+import fs from "fs";
 import { NextResponse } from "next/server";
+import path from "path";
 import sharp from "sharp";
 
 export async function GET(
   req: Request,
   { params }: { params: { params: string[] } }
 ) {
-  // Extract parameters from URL
   const { params: paramArray } = params;
   const [size, bgColor, textColor] = paramArray;
   const [width, height] = size.split("x").map(Number);
 
   const url = new URL(req.url);
   const text = url.searchParams.get("text") || "Placeholder";
-  const font = url.searchParams.get("font") || "Arial";
+  const font = url.searchParams.get("font") || "Roboto-Bold";
 
-  // Ensure colors are in 6-digit hex format
   const normalizeColor = (color: string) => {
-    // Convert 3-digit hex to 6-digit hex
     if (color.length === 3) {
       return color
         .split("")
@@ -29,19 +28,16 @@ export async function GET(
   const backgroundColor = normalizeColor(bgColor);
   const foregroundColor = normalizeColor(textColor);
 
-  // Calculate optimal font size based on image dimensions and text length
   const baseFontSize = Math.min(width, height) * 0.1;
   const textLength = text.length;
   const scaleFactor = Math.min(1, 20 / Math.max(1, textLength * 0.1));
   const fontSize = Math.max(12, baseFontSize * scaleFactor);
 
-  // Text wrapping configuration
-  const maxCharsPerLine = Math.floor((width * 0.8) / (fontSize * 0.6)); // Approximate chars that fit in 80% of width
+  const maxCharsPerLine = Math.floor((width * 0.8) / (fontSize * 0.6));
   const words = text.split(" ");
   const lines: string[] = [];
   let currentLine = "";
 
-  // Improved text wrapping algorithm
   for (const word of words) {
     const testLine = currentLine ? `${currentLine} ${word}` : word;
     if (testLine.length <= maxCharsPerLine) {
@@ -53,18 +49,39 @@ export async function GET(
   }
   if (currentLine) lines.push(currentLine);
 
-  // Calculate text block dimensions
   const lineHeight = fontSize * 1.2;
   const textBlockHeight = lines.length * lineHeight;
   const startY = (height - textBlockHeight) / 2 + fontSize;
 
-  // Create SVG for text overlay
+  // Load font file as base64
+  const fontPath = path.resolve(
+    process.cwd(),
+    "public",
+    "fonts",
+    `${font}.ttf`
+  );
+
+  let fontBase64 = "";
+  try {
+    const fontBuffer = fs.readFileSync(fontPath);
+    fontBase64 = fontBuffer.toString("base64");
+  } catch (err) {
+    console.error(`Font ${font}.ttf not found, falling back to system fonts.`);
+  }
+
   const svgText = `
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        ${
+          fontBase64
+            ? `<style>@font-face { font-family: '${font}'; src: url('data:font/ttf;base64,${fontBase64}') format('truetype'); }</style>`
+            : ""
+        }
+      </defs>
       <rect width="100%" height="100%" fill="#${backgroundColor}" />
       <style>
         text {
-          font-family: ${font}, system-ui, sans-serif;
+          font-family: ${fontBase64 ? font : "system-ui, sans-serif"};
           font-size: ${fontSize}px;
           font-weight: bold;
           fill: #${foregroundColor};
@@ -85,7 +102,6 @@ export async function GET(
     </svg>
   `;
 
-  // Convert SVG to PNG with sharp
   const buffer = await sharp(Buffer.from(svgText)).png().toBuffer();
 
   return new NextResponse(buffer, {
