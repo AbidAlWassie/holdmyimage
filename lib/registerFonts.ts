@@ -1,3 +1,4 @@
+// lib\registerFonts.ts
 import { registerFont } from "canvas";
 
 // Register Lora

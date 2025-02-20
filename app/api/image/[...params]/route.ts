@@ -13,17 +13,15 @@ export async function GET(
 
   const url = new URL(req.url);
   const text = url.searchParams.get("text") || "Placeholder";
-  const font = url.searchParams.get("font") || "Roboto-Bold";
+  const fontName = url.searchParams.get("font") || "Roboto-Regular";
 
-  const normalizeColor = (color: string) => {
-    if (color.length === 3) {
-      return color
-        .split("")
-        .map((char) => char + char)
-        .join("");
-    }
-    return color;
-  };
+  const normalizeColor = (color: string) =>
+    color.length === 3
+      ? color
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : color;
 
   const backgroundColor = normalizeColor(bgColor);
   const foregroundColor = normalizeColor(textColor);
@@ -53,20 +51,14 @@ export async function GET(
   const textBlockHeight = lines.length * lineHeight;
   const startY = (height - textBlockHeight) / 2 + fontSize;
 
-  // Load font file as base64
-  const fontPath = path.resolve(
-    process.cwd(),
-    "public",
-    "fonts",
-    `${font}.ttf`
-  );
-
+  // Load font as Base64
+  const fontPath = path.join(process.cwd(), "public/fonts", `${fontName}.ttf`);
   let fontBase64 = "";
   try {
     const fontBuffer = fs.readFileSync(fontPath);
     fontBase64 = fontBuffer.toString("base64");
   } catch (err) {
-    console.error(`Font ${font}.ttf not found, falling back to system fonts.`);
+    console.error(`Font ${fontPath} not found. Falling back to system font.`);
   }
 
   const svgText = `
@@ -74,31 +66,26 @@ export async function GET(
       <defs>
         ${
           fontBase64
-            ? `<style>@font-face { font-family: '${font}'; src: url('data:font/ttf;base64,${fontBase64}') format('truetype'); }</style>`
+            ? `<style>@font-face { font-family: '${fontName}'; src: url('data:font/ttf;base64,${fontBase64}') format('truetype'); }</style>`
             : ""
         }
       </defs>
       <rect width="100%" height="100%" fill="#${backgroundColor}" />
-      <style>
-        text {
-          font-family: ${fontBase64 ? font : "system-ui, sans-serif"};
-          font-size: ${fontSize}px;
-          font-weight: bold;
-          fill: #${foregroundColor};
-          text-anchor: middle;
-          dominant-baseline: middle;
-        }
-      </style>
-      ${lines
-        .map(
-          (line, index) => `
-        <text 
-          x="50%" 
-          y="${startY + index * lineHeight}"
-        >${line}</text>
-      `
-        )
-        .join("")}
+      <g dominant-baseline="middle" text-anchor="middle">
+        ${lines
+          .map(
+            (line, index) => `
+          <text
+            x="50%"
+            y="${startY + index * lineHeight}"
+            font-family="${fontBase64 ? fontName : "Arial, sans-serif"}"
+            font-size="${fontSize}"
+            font-weight="bold"
+            fill="#${foregroundColor}"
+          >${line}</text>`
+          )
+          .join("")}
+      </g>
     </svg>
   `;
 
