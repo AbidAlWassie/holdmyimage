@@ -32,8 +32,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HoldMyImage",
-  description: "Generate custom placeholder images easily",
+  title: "holdmyimage",
+  description: "Generate static placeholder images easily",
 };
 
 export default function RootLayout({
