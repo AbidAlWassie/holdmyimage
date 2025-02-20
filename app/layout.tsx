@@ -1,13 +1,6 @@
 import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
-import {
-  Geist,
-  Geist_Mono,
-  Lora,
-  Montserrat,
-  Oswald,
-  Roboto,
-} from "next/font/google";
+import { Geist, Geist_Mono, Lora, Montserrat, Roboto } from "next/font/google";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -20,12 +13,6 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin"],
   weight: "800",
-});
-
-const oswald = Oswald({
-  variable: "--font-oswald",
-  subsets: ["latin"],
-  weight: "700",
 });
 
 const lora = Lora({
@@ -57,7 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${roboto.variable} ${montserrat.variable} ${lora.variable} ${oswald.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${roboto.variable} ${montserrat.variable} ${lora.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
         <Toaster />
