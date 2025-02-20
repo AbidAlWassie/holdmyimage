@@ -8,10 +8,10 @@ import { useState } from "react";
 export default function Home() {
   const [width, setWidth] = useState(1280);
   const [height, setHeight] = useState(720);
-  const [bgColor, setBgColor] = useState("ddd");
-  const [textColor, setTextColor] = useState("000");
+  const [bgColor, setBgColor] = useState("dddddd");
+  const [textColor, setTextColor] = useState("000000");
   const [text, setText] = useState("Start typing to see the change.");
-  const [font, setFont] = useState("Arial");
+  const [font, setFont] = useState("Roboto");
 
   const imageUrl = `/api/image/${width}x${height}/${bgColor}/${textColor}?text=${encodeURIComponent(
     text

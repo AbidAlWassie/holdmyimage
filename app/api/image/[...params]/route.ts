@@ -11,8 +11,8 @@ export async function GET(
   const [width, height] = size.split("x").map(Number);
 
   const url = new URL(req.url);
-  const text = url.searchParams.get("text") || "Start typing...";
-  const font = url.searchParams.get("font") || "Roboto";
+  const text = url.searchParams.get("text") || "Placeholder";
+  const font = url.searchParams.get("font") || "Arial";
 
   // Ensure colors are in 6-digit hex format
   const normalizeColor = (color: string) => {
@@ -58,7 +58,7 @@ export async function GET(
   const textBlockHeight = lines.length * lineHeight;
   const startY = (height - textBlockHeight) / 2 + fontSize;
 
-  // Generate SVG with text wrapping and proper positioning
+  // Create SVG for text overlay
   const svgText = `
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
       <rect width="100%" height="100%" fill="#${backgroundColor}" />
