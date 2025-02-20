@@ -1,4 +1,5 @@
 "use client";
+import Credits from "@/components/Credits";
 import ImageActions from "@/components/ImageActions";
 import ImageControls from "@/components/ImageControls";
 import ImagePreview from "@/components/ImagePreview";
@@ -41,6 +42,7 @@ export default function Home() {
         />
         <ImagePreview imageUrl={imageUrl} width={width} height={height} />
         <ImageActions imageUrl={imageUrl} />
+        <Credits />
       </Card>
     </div>
   );
