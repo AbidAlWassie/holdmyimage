@@ -52,7 +52,7 @@ export async function GET(
   const startY = (height - textBlockHeight) / 2 + fontSize;
 
   // Load font as Base64
-  const fontPath = path.join(process.cwd(), "public/fonts", `${fontName}.ttf`);
+  const fontPath = path.join(__dirname, "public", "fonts", `${fontName}.ttf`);
   let fontBase64 = "";
   try {
     const fontBuffer = fs.readFileSync(fontPath);
