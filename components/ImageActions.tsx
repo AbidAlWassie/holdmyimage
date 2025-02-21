@@ -57,7 +57,7 @@ export default function ImageActions({ imageUrl }: ImageActionsProps) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `placeholder-image.${isPng ? "svg" : "png"}`;
+      a.download = `placeholder-image.${isPng ? "png" : "svg"}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
