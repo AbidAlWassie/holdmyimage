@@ -14,7 +14,7 @@ export default function ImagePreview({
   return (
     <CardContent className="pt-6">
       <img
-        src={imageUrl}
+        src={`${imageUrl}&format=svg`}
         alt={`${width}x${height} placeholder`}
         className="w-full max-w-full rounded-xl shadow-md transition-transform hover:scale-105"
       />
