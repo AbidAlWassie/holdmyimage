@@ -65,11 +65,7 @@ export async function GET(
   const svgText = `
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        ${
-          fontBase64
-            ? `<style>@font-face { font-family: '${fontName}'; src: url('data:font/ttf;base64,${fontBase64}') format('truetype'); }</style>`
-            : ""
-        }
+        <style>@font-face { font-family: '${fontName}, Arial, sans-serif'; src: url('data:font/ttf;base64,${fontBase64}') format('truetype'); }</style>
       </defs>
       <rect width="100%" height="100%" fill="#${backgroundColor}" />
       <g dominant-baseline="middle" text-anchor="middle">
@@ -79,7 +75,7 @@ export async function GET(
           <text
             x="50%"
             y="${startY + index * lineHeight}"
-            font-family="${fontBase64 ? fontName : "Arial, sans-serif"}"
+            font-family="${fontName}, Arial, sans-serif"
             font-size="${fontSize}"
             font-weight="bold"
             fill="#${foregroundColor}"

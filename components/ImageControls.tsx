@@ -23,20 +23,7 @@ type ImageControlsProps = {
   setFont: (value: string) => void;
 };
 
-const fontOptions = [
-  "Lato",
-  "Lora",
-  "Montserrat",
-  "Noto Sans",
-  "Open Sans",
-  "Oswald",
-  "Playfair Display",
-  "Poppins",
-  "PT Sans",
-  "Raleway",
-  "Roboto",
-  "Source Sans Pro",
-];
+const fontOptions = ["Roboto", "Montserrat", "Lora", "Open Sans", "Oswald"];
 
 export default function ImageControls({
   width,
