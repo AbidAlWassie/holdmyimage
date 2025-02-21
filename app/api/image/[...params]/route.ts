@@ -14,6 +14,7 @@ export async function GET(
   const url = new URL(req.url);
   const text = url.searchParams.get("text") || "Placeholder";
   const fontName = url.searchParams.get("font") || "Roboto-Regular";
+  const format = url.searchParams.get("format") || "png"; // Default to PNG if not specified
 
   const normalizeColor = (color: string) =>
     color.length === 3
@@ -89,12 +90,21 @@ export async function GET(
     </svg>
   `;
 
-  const buffer = await sharp(Buffer.from(svgText)).png().toBuffer();
-
-  return new NextResponse(buffer, {
-    headers: {
-      "Content-Type": "image/png",
-      "Cache-Control": "public, max-age=3600",
-    },
-  });
+  if (format.toLowerCase() === "svg") {
+    return new NextResponse(svgText, {
+      headers: {
+        "Content-Type": "image/svg+xml",
+        "Cache-Control": "public, max-age=3600",
+      },
+    });
+  } else {
+    // Default to PNG
+    const buffer = await sharp(Buffer.from(svgText)).png().toBuffer();
+    return new NextResponse(buffer, {
+      headers: {
+        "Content-Type": "image/png",
+        "Cache-Control": "public, max-age=3600",
+      },
+    });
+  }
 }

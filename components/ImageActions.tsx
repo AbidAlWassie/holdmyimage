@@ -1,7 +1,10 @@
+// components\ImageActions.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, ExternalLink } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -13,18 +16,17 @@ type ImageActionsProps = {
 export default function ImageActions({ imageUrl }: ImageActionsProps) {
   const { toast } = useToast();
   const [fullUrl, setFullUrl] = useState<string | null>(null);
-  // const [isSvg, setIsSvg] = useState(false);
+  const [isPng, setIsPng] = useState(false);
 
   useEffect(() => {
     const url = new URL(window.location.origin + imageUrl);
-    // if (isSvg) {
-    //   url.searchParams.set("format", "png");
-    // } else {
-    //   url.searchParams.delete("format");
-    // }
+    if (isPng) {
+      url.searchParams.delete("format");
+    } else {
+      url.searchParams.set("format", "svg");
+    }
     setFullUrl(url.toString());
-    // }, [imageUrl, isSvg]);
-  }, [imageUrl]);
+  }, [imageUrl, isPng]);
 
   const copyToClipboard = async () => {
     if (!fullUrl) return;
@@ -55,8 +57,7 @@ export default function ImageActions({ imageUrl }: ImageActionsProps) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      // a.download = `placeholder-image.${isSvg ? "png" : "svg"}`;
-      a.download = `placeholder-image.png`;
+      a.download = `placeholder-image.${isPng ? "svg" : "png"}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -76,8 +77,8 @@ export default function ImageActions({ imageUrl }: ImageActionsProps) {
     <CardContent className="pt-6">
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
-          {/* <Switch id="png-mode" checked={isSvg} onCheckedChange={setIsSvg} /> */}
-          {/* <Label htmlFor="png-mode">SVG Mode</Label> */}
+          <Switch id="png-mode" checked={isPng} onCheckedChange={setIsPng} />
+          <Label htmlFor="png-mode">PNG Mode</Label>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <Button
@@ -95,8 +96,7 @@ export default function ImageActions({ imageUrl }: ImageActionsProps) {
             disabled={!fullUrl}
           >
             <Copy className="mr-2 h-4 w-4" />
-            {/* Download {isSvg ? "SVG" : "PNG"} */}
-            Download PNG
+            Download {isPng ? "PNG" : "SVG"}
           </Button>
         </div>
         <Button
