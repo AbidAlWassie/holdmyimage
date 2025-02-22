@@ -82,7 +82,7 @@ export default function ImageActions({ imageUrl }: ImageActionsProps) {
         <div className="grid grid-cols-2 gap-4">
           <Button
             onClick={() => fullUrl && window.open(fullUrl, "_blank")}
-            className="w-full bg-primary hover:bg-primary/90"
+            className="w-full bg-primary hover:bg-primary/90 "
             disabled={!fullUrl}
           >
             <ExternalLink className="mr-2 h-4 w-4" />
@@ -101,7 +101,7 @@ export default function ImageActions({ imageUrl }: ImageActionsProps) {
         <Button
           onClick={copyToClipboard}
           variant="secondary"
-          className="w-full"
+          className="w-full dark:bg-gray-600 dark:hover:bg-gray-700"
           disabled={!fullUrl}
         >
           <Copy className="mr-2 h-4 w-4" />

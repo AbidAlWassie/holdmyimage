@@ -3,6 +3,7 @@ import Credits from "@/components/Credits";
 import ImageActions from "@/components/ImageActions";
 import ImageControls from "@/components/ImageControls";
 import ImagePreview from "@/components/ImagePreview";
+import ModeToggle from "@/components/ThemeToggle";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 
@@ -22,9 +23,12 @@ export default function Home() {
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
         <CardHeader className="border-b border-gray-200 dark:border-gray-700">
-          <CardTitle className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
-            🖼️holdmyimage
-          </CardTitle>
+          <div className="flex flex-row justify-between items-center m-0">
+            <CardTitle className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+              🖼️holdmyimage
+            </CardTitle>
+            <ModeToggle />
+          </div>
         </CardHeader>
         <ImageControls
           width={width}
