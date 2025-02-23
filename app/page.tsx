@@ -26,15 +26,26 @@ export default function Home() {
   const [textColor, setTextColor] = useState("e7edee");
   const [text, setText] = useState("Start typing to see the change.");
   const [font, setFont] = useState("Roboto");
-  // Add new state for patterns
+  // manage state for patterns
   const [pattern, setPattern] = useState<Pattern>("waves");
   const [patternDensity, setPatternDensity] = useState(120);
+  const [useGradient, setUseGradient] = useState(false);
+  const [gradientColor1, setGradientColor1] = useState("4db3a7");
+  const [gradientColor2, setGradientColor2] = useState("156884");
+  const [gradientDirection, setGradientDirection] = useState<
+    "horizontal" | "vertical" | "diagonal"
+  >("horizontal");
 
+  // Update the imageUrl
   const imageUrl = `/api/image/${width}x${height}/${bgColor}/${textColor}?text=${encodeURIComponent(
     text
   )}&font=${encodeURIComponent(
     font
-  )}&pattern=${pattern}&patternDensity=${patternDensity}`;
+  )}&pattern=${pattern}&patternDensity=${patternDensity}${
+    useGradient
+      ? `&gradient=${gradientColor1},${gradientColor2}&direction=${gradientDirection}`
+      : ""
+  }`;
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -64,6 +75,14 @@ export default function Home() {
           setFont={setFont}
           setPattern={setPattern}
           setPatternDensity={setPatternDensity}
+          useGradient={useGradient}
+          gradientColor1={gradientColor1}
+          gradientColor2={gradientColor2}
+          gradientDirection={gradientDirection}
+          setUseGradient={setUseGradient}
+          setGradientColor1={setGradientColor1}
+          setGradientColor2={setGradientColor2}
+          setGradientDirection={setGradientDirection}
         />
         <ImagePreview imageUrl={imageUrl} width={width} height={height} />
         <ImageActions imageUrl={imageUrl} />

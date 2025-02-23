@@ -8,8 +8,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "./ui/switch";
 
-// Add pattern type at the top with other imports
 type Pattern =
   | "none"
   | "waves"
@@ -22,7 +22,6 @@ type Pattern =
   | "circles"
   | "circleOutline";
 
-// Update ImageControlsProps to include pattern props
 type ImageControlsProps = {
   width: number;
   height: number;
@@ -40,6 +39,14 @@ type ImageControlsProps = {
   setFont: (value: string) => void;
   setPattern: (value: Pattern) => void;
   setPatternDensity: (value: number) => void;
+  useGradient: boolean;
+  gradientColor1: string;
+  gradientColor2: string;
+  gradientDirection: "horizontal" | "vertical" | "diagonal";
+  setUseGradient: (value: boolean) => void;
+  setGradientColor1: (value: string) => void;
+  setGradientColor2: (value: string) => void;
+  setGradientDirection: (value: "horizontal" | "vertical" | "diagonal") => void;
 };
 
 const fontOptions = ["Roboto", "Oswald", "Open Sans", "Montserrat", "Lora"];
@@ -61,9 +68,24 @@ export default function ImageControls({
   setFont,
   setPattern,
   setPatternDensity,
+  useGradient,
+  gradientColor1,
+  gradientColor2,
+  gradientDirection,
+  setUseGradient,
+  setGradientColor1,
+  setGradientColor2,
+  setGradientDirection,
 }: ImageControlsProps) {
-  // Keep all existing handlers...
-
+  const handleColorChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setter: (value: string) => void
+  ) => {
+    const value = e.target.value.replace("#", "");
+    if (/^[0-9A-Fa-f]{0,6}$/.test(value)) {
+      setter(value);
+    }
+  };
   return (
     <div>
       <div className="grid gap-4 p-6">
@@ -191,7 +213,7 @@ export default function ImageControls({
               >
                 <SelectValue placeholder="Select pattern" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
                 <SelectItem value="none">None</SelectItem>
                 <SelectItem value="waves">Waves</SelectItem>
                 <SelectItem value="lines">Lines</SelectItem>
@@ -228,6 +250,84 @@ export default function ImageControls({
             />
           </div>
         )}
+
+        <div className="flex items-center space-x-2 my-2">
+          <Switch
+            id="useGradient"
+            checked={useGradient}
+            onCheckedChange={setUseGradient}
+          />
+          <Label htmlFor="useGradient">Use Gradient Background</Label>
+        </div>
+
+        <div>
+          {useGradient && (
+            <div className="space-y-4">
+              <div className="flex gap-4 mx-auto">
+                <div className="w-full">
+                  <Label htmlFor="gradientColor1">Gradient 1</Label>
+                  <div className="flex items-center gap-3 mt-2">
+                    <Input
+                      id="gradientColorPicker1"
+                      type="color"
+                      value={`#${gradientColor1}`}
+                      onChange={(e) => handleColorChange(e, setGradientColor1)}
+                      className="w-12 h-12 p-1 rounded-md border border-gray-300 dark:border-gray-600 cursor-pointer"
+                    />
+                    <Input
+                      id="gradientColor1"
+                      type="text"
+                      value={`${gradientColor1}`}
+                      onChange={(e) => handleColorChange(e, setGradientColor1)}
+                      placeholder="Gradient 1 (hex)"
+                      className="flex-1 bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-indigo-500 dark:focus:ring-indigo-400 rounded-lg"
+                    />
+                  </div>
+                </div>
+                <div className="w-full">
+                  <Label htmlFor="gradientColor2">Gradient 2</Label>
+                  <div className="flex items-center gap-3 mt-2">
+                    <Input
+                      id="gradientColorPicker2"
+                      type="color"
+                      value={`#${gradientColor2}`}
+                      onChange={(e) => handleColorChange(e, setGradientColor2)}
+                      className="w-12 h-12 p-1 rounded-md border border-gray-300 dark:border-gray-600 cursor-pointer"
+                    />
+                    <Input
+                      id="gradientColor2"
+                      type="text"
+                      value={`${gradientColor2}`}
+                      onChange={(e) => handleColorChange(e, setGradientColor2)}
+                      placeholder="Gradient 2 (hex)"
+                      className="flex-1 bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-indigo-500 dark:focus:ring-indigo-400 rounded-lg"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="gradientDirection">Gradient Direction</Label>
+                <Select
+                  value={gradientDirection}
+                  onValueChange={setGradientDirection}
+                >
+                  <SelectTrigger
+                    id="gradientDirection"
+                    className="mt-2 bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-indigo-500 dark:focus:ring-indigo-400 rounded-lg"
+                  >
+                    <SelectValue placeholder="Select direction" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                    <SelectItem value="horizontal">Horizontal</SelectItem>
+                    <SelectItem value="vertical">Vertical</SelectItem>
+                    <SelectItem value="diagonal">Diagonal</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

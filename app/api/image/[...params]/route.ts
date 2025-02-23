@@ -187,13 +187,45 @@ export async function GET(
     console.error(`Font ${fontPath} not found. Falling back to system font.`);
   }
 
+  // Gradient config
+  const useGradient = url.searchParams.get("gradient") !== null;
+  const [gradientColor1, gradientColor2] = (
+    url.searchParams.get("gradient") || ""
+  ).split(",");
+  const gradientDirection = url.searchParams.get("direction") || "horizontal";
+
+  const getGradientAngle = (direction: string) => {
+    switch (direction) {
+      case "vertical":
+        return "0";
+      case "diagonal":
+        return "45";
+      default:
+        return "90";
+    }
+  };
+
   // SVG template
   const svgText = `
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <style>@font-face { font-family: '${fontName}, Arial, sans-serif'; src: url('data:font/ttf;base64,${fontBase64}') format('truetype'); }</style>
       </defs>
-      <rect width="100%" height="100%" fill="#${backgroundColor}" />
+      ${
+        useGradient
+          ? `
+        <defs>
+          <linearGradient id="grad" x1="0%" y1="0%" x2="${
+            gradientDirection === "vertical" ? "0%" : "100%"
+          }" y2="${gradientDirection === "horizontal" ? "0%" : "100%"}">
+            <stop offset="0%" style="stop-color:#${gradientColor1};stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#${gradientColor2};stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grad)" />
+      `
+          : `<rect width="100%" height="100%" fill="#${backgroundColor}" />`
+      }
       ${generatePattern(
         pattern,
         width,
