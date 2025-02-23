@@ -1,11 +1,9 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, ExternalLink } from "lucide-react";
+import { Copy, Download, ExternalLink } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type ImageActionsProps = {
@@ -82,7 +80,7 @@ export default function ImageActions({ imageUrl }: ImageActionsProps) {
         <div className="grid grid-cols-2 gap-4">
           <Button
             onClick={() => fullUrl && window.open(fullUrl, "_blank")}
-            className="w-full bg-primary hover:bg-primary/90 "
+            className="w-full bg-primary hover:bg-primary/90"
             disabled={!fullUrl}
           >
             <ExternalLink className="mr-2 h-4 w-4" />
@@ -94,7 +92,7 @@ export default function ImageActions({ imageUrl }: ImageActionsProps) {
             className="w-full"
             disabled={!fullUrl}
           >
-            <Copy className="mr-2 h-4 w-4" />
+            <Download className="mr-2 h-4 w-4" />
             Download {isPng ? "PNG" : "SVG"}
           </Button>
         </div>
